@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:flutter_facebook/config/palette.dart';
 import 'package:flutter_facebook/widgets/widgets.dart';
 import 'package:flutter_facebook/data/data.dart';
+import 'package:flutter_facebook/models/models.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -54,6 +55,15 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final Post post = posts[index];
+              return PostContainer(post: post);
+            },
+            childCount: posts.length,
+          ),
+        )
       ],
     ));
   }
