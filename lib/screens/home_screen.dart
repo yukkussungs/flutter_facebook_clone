@@ -5,66 +5,135 @@ import 'package:flutter_facebook/config/palette.dart';
 import 'package:flutter_facebook/widgets/widgets.dart';
 import 'package:flutter_facebook/data/data.dart';
 import 'package:flutter_facebook/models/models.dart';
+// import 'package:flutter_facebook/screens/screens.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
         body: CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          title: Text(
-            'facebook',
-            style: const TextStyle(
-              color: Palette.facebookBlue,
-              fontSize: 28.0,
-              fontWeight: FontWeight.bold,
-              letterSpacing: -1.2,
+          slivers: [
+            SliverAppBar(
+              brightness: Brightness.light,
+              backgroundColor: Colors.white,
+              title: Text(
+                'facebook',
+                style: const TextStyle(
+                  color: Palette.facebookBlue,
+                  fontSize: 28.0,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1.2,
+                ),
+              ),
+              centerTitle: false,
+              floating: true,
+              actions: [
+                CircleButton(
+                    icon: Icons.search,
+                    iconSize: 30.0,
+                    onPressed: () => print('検索')),
+                CircleButton(
+                    icon: MdiIcons.facebookMessenger,
+                    iconSize: 30.0,
+                    onPressed: () => print('message')),
+              ],
             ),
-          ),
-          centerTitle: false,
-          floating: true,
-          actions: [
-            CircleButton(
-                icon: Icons.search,
-                iconSize: 30.0,
-                onPressed: () => print('検索')),
-            CircleButton(
-                icon: MdiIcons.facebookMessenger,
-                iconSize: 30.0,
-                onPressed: () => print('message')),
+            SliverToBoxAdapter(
+              child: CreatePostContainer(currentUser: currentUser),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
+              sliver: SliverToBoxAdapter(
+                child: Room(onlineUsers: onlineUsers),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+              sliver: SliverToBoxAdapter(
+                child: Stories(
+                  currentUser: currentUser,
+                  stories: stories,
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final Post post = posts[index];
+                  return PostContainer(post: post);
+                },
+                childCount: posts.length,
+              ),
+            )
           ],
         ),
-        SliverToBoxAdapter(
-          child: CreatePostContainer(currentUser: currentUser),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-          sliver: SliverToBoxAdapter(
-            child: Room(onlineUsers: onlineUsers),
+      ),
+    );
+  }
+}
+
+class _HomeScreenMobile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            brightness: Brightness.light,
+            backgroundColor: Colors.white,
+            title: Text(
+              'facebook',
+              style: const TextStyle(
+                color: Palette.facebookBlue,
+                fontSize: 28.0,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1.2,
+              ),
+            ),
+            centerTitle: false,
+            floating: true,
+            actions: [
+              CircleButton(
+                  icon: Icons.search,
+                  iconSize: 30.0,
+                  onPressed: () => print('検索')),
+              CircleButton(
+                  icon: MdiIcons.facebookMessenger,
+                  iconSize: 30.0,
+                  onPressed: () => print('message')),
+            ],
           ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-          sliver: SliverToBoxAdapter(
-            child: Stories(
-              currentUser: currentUser,
-              stories: stories,
+          SliverToBoxAdapter(
+            child: CreatePostContainer(currentUser: currentUser),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
+            sliver: SliverToBoxAdapter(
+              child: Room(onlineUsers: onlineUsers),
             ),
           ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final Post post = posts[index];
-              return PostContainer(post: post);
-            },
-            childCount: posts.length,
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+            sliver: SliverToBoxAdapter(
+              child: Stories(
+                currentUser: currentUser,
+                stories: stories,
+              ),
+            ),
           ),
-        )
-      ],
-    ));
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final Post post = posts[index];
+                return PostContainer(post: post);
+              },
+              childCount: posts.length,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
